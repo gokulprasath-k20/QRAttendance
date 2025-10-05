@@ -5,8 +5,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import { RefreshCw, Clock, Users } from 'lucide-react';
-import { encryptQRToken, generateQRToken } from '@/lib/crypto';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { encryptQRToken, generateQRToken } from '../lib/crypto';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
 
 interface QRGeneratorProps {
   sessionId: string;

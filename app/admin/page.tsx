@@ -15,11 +15,11 @@ import {
   LogOut,
   Activity
 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { useAuth, withAuth } from '@/lib/auth';
-import { QRSession, Attendance, DashboardStats } from '@/types';
-import { formatDate, calculateAttendancePercentage } from '@/lib/utils';
+import { Button } from '../../components/ui/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
+import { useAuth, withAuth } from '../../lib/auth';
+import { QRSession, Attendance, DashboardStats } from '../../types';
+import { formatDate, calculateAttendancePercentage } from '../../lib/utils';
 
 function AdminDashboard() {
   const { user, logout } = useAuth();
