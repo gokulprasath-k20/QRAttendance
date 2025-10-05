@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase';
-import { verifyPassword } from '@/lib/crypto';
+import { supabaseAdmin } from '../../../../lib/supabase';
+import { verifyPassword } from '../../../../lib/crypto';
 
 export async function POST(request: NextRequest) {
   try {

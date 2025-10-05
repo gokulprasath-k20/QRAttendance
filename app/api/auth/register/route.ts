@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase';
-import { hashPassword } from '@/lib/crypto';
-import { isValidEmail, isValidRegNo } from '@/lib/utils';
+import { supabaseAdmin } from '../../../../lib/supabase';
+import { hashPassword } from '../../../../lib/crypto';
+import { isValidEmail, isValidRegNo } from '../../../../lib/utils';
 
 export async function POST(request: NextRequest) {
   try {
