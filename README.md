@@ -4,6 +4,8 @@ A modern, secure, and mobile-first QR Attendance Management System built with Ne
 
 ## 🚀 Features
 
+> **Build Status**: Import paths fixed for Vercel deployment
+
 - **🔐 Security & Authentication**
   - 5-second QR code rotation with AES encrypted tokens
   - Role-based access control (Admin, Staff, Student)
