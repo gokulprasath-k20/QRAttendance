@@ -11,6 +11,10 @@ const nextConfig = {
     // Warning: This allows production builds to successfully complete even if your project has ESLint errors
     ignoreDuringBuilds: true,
   },
+  // Ensure proper module resolution
+  experimental: {
+    esmExternals: 'loose',
+  },
   async headers() {
     return [
       {
