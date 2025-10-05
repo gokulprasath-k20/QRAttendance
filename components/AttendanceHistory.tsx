@@ -5,11 +5,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Filter, Download, Calendar, User, Clock } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { formatDate } from '@/lib/utils';
+import { Button } from './ui/Button';
+import { Input } from './ui/Input';
+import { Select } from './ui/Select';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
+import { formatDate } from '../lib/utils';
 // @ts-ignore
 import ExcelJS from 'exceljs';
 

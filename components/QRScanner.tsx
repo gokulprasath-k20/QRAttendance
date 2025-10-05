@@ -5,9 +5,9 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Camera, X, CheckCircle, AlertCircle, Scan } from 'lucide-react';
 import jsQR from 'jsqr';
-import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { decryptQRToken, isQRTokenValid } from '@/lib/crypto';
+import { Button } from './ui/Button';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
+import { decryptQRToken, isQRTokenValid } from '../lib/crypto';
 
 interface QRScannerProps {
   onScanSuccess: (token: string) => void;
