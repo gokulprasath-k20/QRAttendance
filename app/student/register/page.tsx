@@ -1,15 +1,15 @@
 'use client';
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { GraduationCap, Mail, Lock, User, Hash, ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
-import { Card } from '@/components/ui/Card';
-import { useAuth } from '@/lib/auth';
+import { Button } from '../../../components/ui/Button';
+import { Input } from '../../../components/ui/Input';
+import { Select } from '../../../components/ui/Select';
+import { Card } from '../../../components/ui/Card';
+import { useAuth } from '../../../lib/auth';
+import { isValidRegNo, isValidEmail } from '../../../lib/utils';
 
 export default function StudentRegisterPage() {
   const [formData, setFormData] = useState({

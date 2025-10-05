@@ -5,11 +5,11 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Users, Mail, Lock, User, BookOpen, ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Card } from '@/components/ui/Card';
-import { useAuth } from '@/lib/auth';
-import { getAllSubjects } from '@/lib/utils';
+import { Button } from '../../../components/ui/Button';
+import { Input } from '../../../components/ui/Input';
+import { Card } from '../../../components/ui/Card';
+import { useAuth } from '../../../lib/auth';
+import { getAllSubjects } from '../../../lib/utils';
 
 export default function StaffRegisterPage() {
   const [formData, setFormData] = useState({

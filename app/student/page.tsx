@@ -15,12 +15,12 @@ import {
   LogOut,
   Scan
 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { QRScanner } from '@/components/QRScanner';
-import { useAuth, withAuth } from '@/lib/auth';
-import { Student, QRSession, Attendance } from '@/types';
-import { formatDate, calculateAttendancePercentage, getAttendanceStatusColor } from '@/lib/utils';
+import { Button } from '../../components/ui/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
+import { QRScanner } from '../../components/QRScanner';
+import { useAuth, withAuth } from '../../lib/auth';
+import { Student, QRSession, Attendance } from '../../types';
+import { formatDate, calculateAttendancePercentage, getAttendanceStatusColor } from '../../lib/utils';
 
 function StudentDashboard() {
   const { user, logout } = useAuth();

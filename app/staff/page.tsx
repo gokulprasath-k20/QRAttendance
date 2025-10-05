@@ -16,14 +16,14 @@ import {
   Eye,
   LogOut
 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Select } from '@/components/ui/Select';
-import { QRGenerator } from '@/components/QRGenerator';
-import { AttendanceHistory } from '@/components/AttendanceHistory';
-import { useAuth, withAuth } from '@/lib/auth';
-import { QRSession, Staff } from '@/types';
-import { getSubjectsForYearSem, formatDate } from '@/lib/utils';
+import { Button } from '../../components/ui/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
+import { Select } from '../../components/ui/Select';
+import { QRGenerator } from '../../components/QRGenerator';
+import { AttendanceHistory } from '../../components/AttendanceHistory';
+import { useAuth, withAuth } from '../../lib/auth';
+import { QRSession, Staff } from '../../types';
+import { getSubjectsForYearSem, formatDate } from '../../lib/utils';
 
 function StaffDashboard() {
   const { user, logout } = useAuth();
