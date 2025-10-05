@@ -1,0 +1,12 @@
+{
+  "/api/admin/register/route": "app/api/admin/register/route.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/sessions/route": "app/api/sessions/route.js",
+  "/api/attendance/route": "app/api/attendance/route.js",
+  "/api/export/route": "app/api/export/route.js",
+  "/student/login/page": "app/student/login/page.js",
+  "/student/page": "app/student/page.js",
+  "/admin/register/page": "app/admin/register/page.js",
+  "/admin/login/page": "app/admin/login/page.js",
+  "/admin/page": "app/admin/page.js"
+}
