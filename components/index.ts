@@ -4,3 +4,4 @@ export { QRGenerator } from './QRGenerator';
 export { QRScanner } from './QRScanner';
 export { AttendanceHistory } from './AttendanceHistory';
 export { default as StudentHistory } from './StudentHistory';
+export { default as StudentHistoryTable } from './StudentHistoryTable';

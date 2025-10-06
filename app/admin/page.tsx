@@ -19,6 +19,7 @@ import { Button } from '../../components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { useAuth, withAuth } from '../../lib/auth';
 import { QRSession, Attendance, DashboardStats } from '../../types';
+import StudentHistoryTable from '../../components/StudentHistoryTable';
 
 function AdminDashboard() {
   const { user, logout } = useAuth();
@@ -210,7 +211,8 @@ function AdminDashboard() {
           </motion.div>
         </div>
 
-
+        {/* Student History Table */}
+        <StudentHistoryTable className="mt-8" />
       </div>
     </div>
   );
