@@ -4,6 +4,7 @@
 /* eslint-disable */
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { 
   QrCode, 
   Calendar, 
@@ -135,6 +136,16 @@ function StudentDashboard() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex justify-center items-center py-4 border-b">
+            <Image
+              src="https://avsec-it.vercel.app/_next/image?url=%2Flogo.png&w=828&q=75"
+              alt="College Logo"
+              width={800}
+              height={200}
+              className="h-auto max-h-16 w-auto"
+              priority
+            />
+          </div>
           <div className="flex justify-between items-center py-3 sm:py-4">
             <div>
               <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 font-playfair">Student Dashboard</h1>

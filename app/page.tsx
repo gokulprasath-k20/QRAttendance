@@ -2,11 +2,28 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { GraduationCap, QrCode } from 'lucide-react';
 
 export default function HomePage() {
   return (
     <div className="min-h-screen">
+      {/* Navigation Header */}
+      <header className="relative z-10 bg-white/10 backdrop-blur-sm border-b border-white/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-center items-center py-4">
+            <Image
+              src="https://avsec-it.vercel.app/_next/image?url=%2Flogo.png&w=828&q=75"
+              alt="College Logo"
+              width={800}
+              height={200}
+              className="h-auto max-h-16 w-auto"
+              priority
+            />
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden min-h-screen flex items-center">
         <div className="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-500 to-secondary-500 opacity-90" />

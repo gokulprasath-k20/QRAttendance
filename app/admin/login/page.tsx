@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Shield, Mail, Lock, ArrowLeft } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
@@ -62,6 +63,16 @@ export default function AdminLoginPage() {
 
           <Card>
             <div className="text-center mb-8">
+              <div className="flex justify-center mb-6">
+                <Image
+                  src="https://avsec-it.vercel.app/_next/image?url=%2Flogo.png&w=828&q=75"
+                  alt="College Logo"
+                  width={800}
+                  height={200}
+                  className="h-auto max-h-20 w-auto"
+                  priority
+                />
+              </div>
               <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
                 <Shield className="w-8 h-8 text-purple-600" />
               </div>
