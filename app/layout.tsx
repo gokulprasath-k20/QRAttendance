@@ -1,9 +1,19 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Rubik, Playfair_Display } from 'next/font/google';
 import { AuthProvider } from '../lib/auth';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const rubik = Rubik({ 
+  subsets: ['latin'],
+  variable: '--font-rubik',
+  display: 'swap',
+});
+
+const playfairDisplay = Playfair_Display({ 
+  subsets: ['latin'],
+  variable: '--font-playfair',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'QR Attendance Management System',
@@ -37,7 +47,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="QR Attendance" />
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
       </head>
-      <body className={inter.className}>
+      <body className={`${rubik.variable} ${playfairDisplay.variable} font-sans`}>
         <AuthProvider>
           <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
             {children}

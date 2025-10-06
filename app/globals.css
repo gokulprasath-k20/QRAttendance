@@ -2,7 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* Font Variables */
+:root {
+  --font-rubik: 'Rubik', system-ui, -apple-system, sans-serif;
+  --font-playfair: 'Playfair Display', Georgia, serif;
+}
 
 :root {
   --color-primary: #8B5CF6;
@@ -37,10 +41,18 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-rubik);
   background-color: var(--color-background);
   color: var(--color-text);
   line-height: 1.6;
+  font-size: 14px;
+}
+
+/* Mobile-first responsive typography */
+@media (min-width: 768px) {
+  html, body {
+    font-size: 16px;
+  }
 }
 
 body {

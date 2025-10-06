@@ -26,40 +26,23 @@ export default function HomePage() {
               <QrCode className="w-10 h-10 text-primary-600" />
             </motion.div>
             
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8 sm:mb-12 font-playfair">
               QR Attendance
               <span className="block text-secondary-200">Management System</span>
             </h1>
-            
-            <p className="text-xl text-primary-100 mb-12 max-w-3xl mx-auto">
-              Modern, secure, and mobile-first attendance management with auto-rotating QR codes, 
-              real-time tracking, and comprehensive analytics for educational institutions.
-            </p>
             
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="flex flex-wrap justify-center gap-4"
+              className="flex justify-center"
             >
               <Link
-                href="/student/register"
-                className="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors duration-200 shadow-lg"
-              >
-                Get Started
-              </Link>
-              <Link
                 href="/student/login"
-                className="bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-2"
+                className="bg-gradient-to-br from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 text-white px-6 sm:px-8 md:px-12 py-3 sm:py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-2 sm:gap-3 text-sm sm:text-base md:text-lg font-rubik"
               >
-                <GraduationCap className="w-5 h-5" />
+                <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 Student Portal
-              </Link>
-              <Link
-                href="#learn-more"
-                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors duration-200"
-              >
-                Learn More
               </Link>
             </motion.div>
           </motion.div>
