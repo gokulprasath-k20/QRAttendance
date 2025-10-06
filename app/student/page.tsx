@@ -138,7 +138,7 @@ function StudentDashboard() {
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
           <div className="flex justify-center items-center py-4 border-b">
             <Image
-              src="https://avsec-it.vercel.app/_next/image?url=%2Flogo.png&w=828&q=75"
+              src="/logo (1).png"
               alt="College Logo"
               width={800}
               height={200}

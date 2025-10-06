@@ -106,7 +106,7 @@ export default function AdminRegisterPage() {
             <div className="text-center mb-8">
               <div className="flex justify-center mb-6">
                 <Image
-                  src="https://avsec-it.vercel.app/_next/image?url=%2Flogo.png&w=828&q=75"
+                  src="/logo (1).png"
                   alt="College Logo"
                   width={800}
                   height={200}
