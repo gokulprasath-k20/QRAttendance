@@ -56,6 +56,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = async () => {
+    const currentUserRole = user?.role;
+    
     try {
       await fetch('/api/auth/logout', {
         method: 'POST',
@@ -64,6 +66,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Logout error:', error);
     } finally {
       setUser(null);
+      
+      // Redirect to role-specific login page
+      if (typeof window !== 'undefined') {
+        switch (currentUserRole) {
+          case 'admin':
+            window.location.href = '/admin/login';
+            break;
+          case 'staff':
+            window.location.href = '/staff/login';
+            break;
+          case 'student':
+            window.location.href = '/student/login';
+            break;
+          default:
+            window.location.href = '/';
+            break;
+        }
+      }
     }
   };
 

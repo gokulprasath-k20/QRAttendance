@@ -8,7 +8,6 @@ import {
   Plus, 
   QrCode, 
   Users, 
-  Clock, 
   BookOpen, 
   Calendar,
   Play,
@@ -407,50 +406,6 @@ function StaffDashboard() {
               </Card>
             )}
 
-            {/* Recent Sessions */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  Recent Sessions
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {sessions.slice(0, 5).map((session) => (
-                    <div
-                      key={session.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                    >
-                      <div>
-                        <p className="text-sm font-medium">{session.subject}</p>
-                        <p className="text-xs text-gray-500">
-                          Year {session.year} • Sem {session.semester}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {formatDate(session.start_time)}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                          session.is_active 
-                            ? 'bg-success-100 text-success-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {session.is_active ? 'Active' : 'Ended'}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                  
-                  {sessions.length === 0 && (
-                    <p className="text-center text-gray-500 py-4">
-                      No sessions yet
-                    </p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
 

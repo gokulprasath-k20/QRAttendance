@@ -11,20 +11,31 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Format date for display
+ * Convert date to Indian Standard Time (IST)
+ */
+function toIST(date: Date): Date {
+  // IST is UTC+5:30
+  const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+  const istOffset = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
+  return new Date(utc + istOffset);
+}
+
+/**
+ * Format date for display in Indian Standard Time
  */
 export function formatDate(date: string | Date): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const istDate = toIST(dateObj);
   
-  if (isToday(dateObj)) {
-    return `Today, ${format(dateObj, 'HH:mm')}`;
+  if (isToday(istDate)) {
+    return `Today, ${format(istDate, 'HH:mm')} IST`;
   }
   
-  if (isYesterday(dateObj)) {
-    return `Yesterday, ${format(dateObj, 'HH:mm')}`;
+  if (isYesterday(istDate)) {
+    return `Yesterday, ${format(istDate, 'HH:mm')} IST`;
   }
   
-  return format(dateObj, 'MMM dd, yyyy HH:mm');
+  return format(istDate, 'MMM dd, yyyy HH:mm') + ' IST';
 }
 
 /**

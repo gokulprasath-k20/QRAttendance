@@ -9,7 +9,7 @@ export default function HomePage() {
     {
       icon: QrCode,
       title: 'Auto-Rotating QR Codes',
-      description: 'Military-grade encrypted QR codes that rotate every 5 seconds for maximum security'
+      description: 'Military-grade encrypted QR codes that rotate every 8 seconds for maximum security'
     },
     {
       icon: Smartphone,
@@ -30,24 +30,8 @@ export default function HomePage() {
 
   const roles = [
     {
-      title: 'Admin Portal',
-      description: 'Comprehensive system management and analytics',
-      icon: Shield,
-      href: '/admin/login',
-      color: 'bg-gradient-to-br from-purple-500 to-purple-600',
-      hoverColor: 'hover:from-purple-600 hover:to-purple-700'
-    },
-    {
-      title: 'Staff Portal',
-      description: 'Create sessions and manage attendance',
-      icon: Users,
-      href: '/staff/login',
-      color: 'bg-gradient-to-br from-blue-500 to-blue-600',
-      hoverColor: 'hover:from-blue-600 hover:to-blue-700'
-    },
-    {
       title: 'Student Portal',
-      description: 'Scan QR codes and track attendance',
+      description: 'Scan QR codes and track your attendance',
       icon: GraduationCap,
       href: '/student/login',
       color: 'bg-gradient-to-br from-green-500 to-green-600',
@@ -93,7 +77,7 @@ export default function HomePage() {
               className="flex flex-wrap justify-center gap-4"
             >
               <Link
-                href="/staff/register"
+                href="/student/register"
                 className="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors duration-200 shadow-lg"
               >
                 Get Started
@@ -163,14 +147,15 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Choose Your Portal
+              Student Access Portal
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Select your role to access the appropriate dashboard
+              Access your student dashboard to scan QR codes and track attendance
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="flex justify-center">
+            <div className="w-full max-w-md">
             {roles.map((role, index) => (
               <motion.div
                 key={role.title}
@@ -193,6 +178,7 @@ export default function HomePage() {
                 </Link>
               </motion.div>
             ))}
+            </div>
           </div>
         </div>
       </section>

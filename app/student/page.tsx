@@ -75,7 +75,12 @@ function StudentDashboard() {
 
       if (response.ok) {
         setScanMessage('✅ Attendance marked successfully!');
-        fetchData(); // Refresh data
+        // Close scanner on success
+        setScannerOpen(false);
+        // Refresh data with a small delay to ensure backend is updated
+        setTimeout(() => {
+          fetchData();
+        }, 500);
       } else {
         setScanMessage(`❌ ${data.error}`);
       }

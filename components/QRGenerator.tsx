@@ -26,7 +26,7 @@ export function QRGenerator({
   onTokenUpdate
 }: QRGeneratorProps) {
   const [currentToken, setCurrentToken] = useState<string>('');
-  const [timeLeft, setTimeLeft] = useState<number>(5);
+  const [timeLeft, setTimeLeft] = useState<number>(8);
   const [rotationCount, setRotationCount] = useState<number>(0);
 
   const generateNewToken = useCallback(() => {
@@ -35,7 +35,7 @@ export function QRGenerator({
     const token = generateQRToken(sessionId, subject, year, semester);
     const encryptedToken = encryptQRToken(token);
     setCurrentToken(encryptedToken);
-    setTimeLeft(5);
+    setTimeLeft(8);
     setRotationCount(prev => prev + 1);
     
     if (onTokenUpdate) {
@@ -50,7 +50,7 @@ export function QRGenerator({
     generateNewToken();
 
     // Set up rotation timer
-    const rotationInterval = setInterval(generateNewToken, 5000);
+    const rotationInterval = setInterval(generateNewToken, 8000);
 
     return () => {
       clearInterval(rotationInterval);
@@ -64,7 +64,7 @@ export function QRGenerator({
     const countdownInterval = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
-          return 5; // Reset to 5 when it reaches 0
+          return 8; // Reset to 8 when it reaches 0
         }
         return prev - 1;
       });
@@ -143,7 +143,7 @@ export function QRGenerator({
           <motion.div
             className="bg-primary-600 h-2 rounded-full"
             initial={{ width: '100%' }}
-            animate={{ width: `${(timeLeft / 5) * 100}%` }}
+            animate={{ width: `${(timeLeft / 8) * 100}%` }}
             transition={{ duration: 1, ease: 'linear' }}
           />
         </div>
@@ -156,7 +156,7 @@ export function QRGenerator({
         {/* Security Notice */}
         <div className="mt-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
           <p className="text-xs text-yellow-700">
-            🔒 This QR code rotates every 5 seconds for maximum security
+            🔒 This QR code rotates every 8 seconds for maximum security
           </p>
         </div>
       </CardContent>
