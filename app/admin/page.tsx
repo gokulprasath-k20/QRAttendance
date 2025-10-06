@@ -19,13 +19,10 @@ import { Button } from '../../components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { useAuth, withAuth } from '../../lib/auth';
 import { QRSession, Attendance, DashboardStats } from '../../types';
-import { formatDate, calculateAttendancePercentage } from '../../lib/utils';
 
 function AdminDashboard() {
   const { user, logout } = useAuth();
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [recentSessions, setRecentSessions] = useState<QRSession[]>([]);
-  const [recentAttendance, setRecentAttendance] = useState<Attendance[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -39,36 +36,33 @@ function AdminDashboard() {
         fetch('/api/attendance')
       ]);
 
+      let activeSessions = 0;
+      let todayAttendance = 0;
+
       if (sessionsRes.ok) {
         const sessionsData = await sessionsRes.json();
-        setRecentSessions(sessionsData.sessions.slice(0, 10));
-        
-        // Calculate stats from sessions data
-        const activeSessions = sessionsData.sessions.filter((s: QRSession) => s.is_active).length;
-        setStats(prev => ({ ...prev, activeSessions } as DashboardStats));
+        activeSessions = sessionsData.sessions.filter((s: QRSession) => s.is_active).length;
       }
 
       if (attendanceRes.ok) {
         const attendanceData = await attendanceRes.json();
-        setRecentAttendance(attendanceData.attendance.slice(0, 10));
         
         // Calculate today's attendance
         const today = new Date().toISOString().split('T')[0];
-        const todayAttendance = attendanceData.attendance.filter((a: Attendance) => 
+        todayAttendance = attendanceData.attendance.filter((a: Attendance) => 
           a.marked_at.startsWith(today)
         ).length;
-        
-        setStats(prev => ({ ...prev, todayAttendance } as DashboardStats));
       }
 
-      // Mock additional stats (in real app, create API endpoint)
-      setStats(prev => ({
-        ...prev,
+      // Set all stats at once
+      setStats({
+        activeSessions,
+        todayAttendance,
         totalStudents: 150,
         totalStaff: 25,
         weeklyAttendance: [45, 52, 48, 61, 55, 67, 58],
         monthlyAttendance: [420, 380, 445, 502, 478, 523, 467, 489, 445, 512, 478, 534]
-      } as DashboardStats));
+      });
 
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
@@ -216,135 +210,7 @@ function AdminDashboard() {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Recent Sessions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5" />
-                Recent Sessions
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentSessions.map((session) => (
-                  <motion.div
-                    key={session.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-                  >
-                    <div>
-                      <h3 className="font-semibold">{session.subject}</h3>
-                      <p className="text-sm text-gray-600">
-                        {session.staff?.name} • Year {session.year} Sem {session.semester}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {formatDate(session.start_time)}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                        session.is_active 
-                          ? 'bg-success-100 text-success-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {session.is_active ? 'Active' : 'Ended'}
-                      </span>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {session.total_students} students
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-                
-                {recentSessions.length === 0 && (
-                  <p className="text-center text-gray-500 py-8">
-                    No sessions yet
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Recent Attendance */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5" />
-                Recent Attendance
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentAttendance.map((attendance) => (
-                  <motion.div
-                    key={attendance.id}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-                  >
-                    <div>
-                      <h3 className="font-semibold">{attendance.student?.name}</h3>
-                      <p className="text-sm text-gray-600">
-                        {attendance.student?.reg_no} • {attendance.session?.subject}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {formatDate(attendance.marked_at)}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-success-100 text-success-800">
-                        Present
-                      </span>
-                    </div>
-                  </motion.div>
-                ))}
-                
-                {recentAttendance.length === 0 && (
-                  <p className="text-center text-gray-500 py-8">
-                    No attendance records yet
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Quick Actions */}
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button
-                variant="outline"
-                className="flex items-center gap-2 h-12"
-                onClick={() => window.open('/admin/users', '_blank')}
-              >
-                <Users className="w-5 h-5" />
-                Manage Users
-              </Button>
-              <Button
-                variant="outline"
-                className="flex items-center gap-2 h-12"
-                onClick={() => window.open('/admin/sessions', '_blank')}
-              >
-                <BookOpen className="w-5 h-5" />
-                View All Sessions
-              </Button>
-              <Button
-                variant="outline"
-                className="flex items-center gap-2 h-12"
-                onClick={() => window.open('/admin/reports', '_blank')}
-              >
-                <TrendingUp className="w-5 h-5" />
-                Generate Reports
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

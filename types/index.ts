@@ -131,3 +131,33 @@ export interface SessionCreateData {
   year: number;
   semester: number;
 }
+
+export interface StudentHistoryRecord {
+  id: string;
+  reg_no: string;
+  name: string;
+  email: string;
+  year: number;
+  semester: number;
+  totalSessions: number;
+  attendedSessions: number;
+  attendancePercentage: number;
+  lastAttendance?: string;
+  recentAttendance: Attendance[];
+  created_at: string;
+}
+
+export interface StudentHistoryFilters {
+  year?: number;
+  semester?: number;
+  subject?: string;
+  attendanceRange?: {
+    min: number;
+    max: number;
+  };
+  dateRange?: {
+    start: string;
+    end: string;
+  };
+  search?: string;
+}
