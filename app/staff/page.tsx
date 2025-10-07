@@ -31,7 +31,10 @@ function StaffDashboard() {
   const [activeSession, setActiveSession] = useState<QRSession | null>(null);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+<<<<<<< HEAD
   const [ending, setEnding] = useState(false);
+=======
+>>>>>>> c472bc562555c8da94eb74c0540c62f23a1b545f
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [attendanceData, setAttendanceData] = useState<any[]>([]);
 
@@ -65,11 +68,17 @@ function StaffDashboard() {
         const data = await response.json();
         setSessions(data.sessions);
         
+<<<<<<< HEAD
         // Find active session - only update if we don't have one already (to prevent auto-start)
         const active = data.sessions.find((s: QRSession) => s.is_active);
         if (!activeSession || activeSession.id !== active?.id) {
           setActiveSession(active || null);
         }
+=======
+        // Find active session
+        const active = data.sessions.find((s: QRSession) => s.is_active);
+        setActiveSession(active || null);
+>>>>>>> c472bc562555c8da94eb74c0540c62f23a1b545f
       }
     } catch (error) {
       console.error('Failed to fetch sessions:', error);
@@ -96,7 +105,10 @@ function StaffDashboard() {
       return;
     }
 
+<<<<<<< HEAD
     if (creating) return; // Prevent double-clicks
+=======
+>>>>>>> c472bc562555c8da94eb74c0540c62f23a1b545f
     setCreating(true);
     try {
       const response = await fetch('/api/sessions', {
@@ -112,11 +124,15 @@ function StaffDashboard() {
       if (response.ok) {
         const data = await response.json();
         setActiveSession(data.session);
+<<<<<<< HEAD
         setSessions((prev: QRSession[]) => {
           // Remove any existing session with same ID and add new one
           const filtered = prev.filter(s => s.id !== data.session.id);
           return [data.session, ...filtered];
         });
+=======
+        setSessions((prev: QRSession[]) => [data.session, ...prev]);
+>>>>>>> c472bc562555c8da94eb74c0540c62f23a1b545f
         setShowCreateForm(false);
         setNewSession({ subject: '', year: '', semester: '' });
       } else {
@@ -132,6 +148,7 @@ function StaffDashboard() {
   };
 
   const endSession = async () => {
+<<<<<<< HEAD
     if (!activeSession || ending) return;
 
     setEnding(true);
@@ -140,6 +157,11 @@ function StaffDashboard() {
       // Optimistically update UI
       setActiveSession(null);
       
+=======
+    if (!activeSession) return;
+
+    try {
+>>>>>>> c472bc562555c8da94eb74c0540c62f23a1b545f
       const response = await fetch(`/api/sessions/${activeSession.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -147,6 +169,7 @@ function StaffDashboard() {
       });
 
       if (response.ok) {
+<<<<<<< HEAD
         // Session ended successfully
         await fetchSessions();
       } else {
@@ -162,6 +185,13 @@ function StaffDashboard() {
       alert('Failed to end session. Please try again.');
     } finally {
       setEnding(false);
+=======
+        setActiveSession(null);
+        fetchSessions();
+      }
+    } catch (error) {
+      console.error('Failed to end session:', error);
+>>>>>>> c472bc562555c8da94eb74c0540c62f23a1b545f
     }
   };
 
@@ -257,12 +287,19 @@ function StaffDashboard() {
                       variant="danger"
                       size="sm"
                       onClick={endSession}
+<<<<<<< HEAD
                       loading={ending}
                       disabled={ending}
                       className="flex items-center gap-2"
                     >
                       <Square className="w-4 h-4" />
                       {ending ? 'Ending...' : 'End Session'}
+=======
+                      className="flex items-center gap-2"
+                    >
+                      <Square className="w-4 h-4" />
+                      End Session
+>>>>>>> c472bc562555c8da94eb74c0540c62f23a1b545f
                     </Button>
                   </CardHeader>
                   <CardContent>
