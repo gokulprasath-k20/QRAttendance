@@ -32,17 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else if (response.status === 401) {
         // Session expired or invalid, clear user state
         setUser(null);
-        // Optionally redirect to login based on current path
-        if (typeof window !== 'undefined' && window.location.pathname !== '/') {
-          const currentPath = window.location.pathname;
-          if (currentPath.includes('/admin')) {
-            window.location.href = '/admin/login';
-          } else if (currentPath.includes('/staff')) {
-            window.location.href = '/staff/login';
-          } else if (currentPath.includes('/student')) {
-            window.location.href = '/student/login';
-          }
-        }
+        console.log('Session expired or invalid, user cleared');
       }
     } catch (error) {
       console.error('Auth check failed:', error);
@@ -160,6 +150,7 @@ export function withAuth<P extends object>(
     }
 
     if (!user) {
+      console.log('No user found, showing auth required message');
       return (
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
@@ -169,12 +160,16 @@ export function withAuth<P extends object>(
             <p className="text-gray-600">
               Please log in to access this page.
             </p>
+            <div className="mt-4 text-sm text-gray-500">
+              Debug: User state is null, loading: {loading.toString()}
+            </div>
           </div>
         </div>
       );
     }
 
     if (allowedRoles && !allowedRoles.includes(user.role)) {
+      console.log('Role mismatch:', { userRole: user.role, allowedRoles });
       return (
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
@@ -184,10 +179,15 @@ export function withAuth<P extends object>(
             <p className="text-gray-600">
               You don't have permission to access this page.
             </p>
+            <div className="mt-4 text-sm text-gray-500">
+              Debug: Your role: {user.role}, Required: {allowedRoles?.join(', ')}
+            </div>
           </div>
         </div>
       );
     }
+
+    console.log('Auth check passed:', { user: user.email, role: user.role });
 
     return <Component {...props} />;
   };

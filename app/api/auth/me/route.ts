@@ -16,7 +16,9 @@ export async function GET(request: NextRequest) {
     let sessionData;
     try {
       sessionData = JSON.parse(Buffer.from(sessionCookie.value, 'base64').toString());
-    } catch {
+      console.log('Session decoded successfully:', { id: sessionData.id, role: sessionData.role, exp: new Date(sessionData.exp) });
+    } catch (error) {
+      console.error('Session decode error:', error);
       return NextResponse.json(
         { error: 'Invalid session' },
         { status: 401 }
@@ -52,18 +54,31 @@ export async function GET(request: NextRequest) {
         );
     }
 
+    console.log('Querying table:', tableName, 'for user ID:', id);
+    
     const { data: user, error } = await supabaseAdmin
       .from(tableName)
       .select('*')
       .eq('id', id)
       .single();
 
-    if (error || !user) {
+    if (error) {
+      console.error('Database query error:', error);
+      return NextResponse.json(
+        { error: 'Database error: ' + error.message },
+        { status: 500 }
+      );
+    }
+
+    if (!user) {
+      console.error('User not found in database');
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
       );
     }
+
+    console.log('User found successfully:', { id: user.id, role });
 
     // Remove password hash from response
     const { password_hash, ...userWithoutPassword } = user;
