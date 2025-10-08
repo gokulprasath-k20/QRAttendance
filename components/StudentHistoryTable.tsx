@@ -35,24 +35,27 @@ export default function StudentHistoryTable({ className }: StudentHistoryTablePr
   const [filters, setFilters] = useState<StudentHistoryFilters>({
     attendanceRange: { min: 0, max: 100 }
   });
+  const [appliedFilters, setAppliedFilters] = useState<StudentHistoryFilters>({
+    attendanceRange: { min: 0, max: 100 }
+  });
 
   useEffect(() => {
     fetchStudentHistory();
-  }, [filters]);
+  }, [appliedFilters]);
 
   const fetchStudentHistory = async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
       
-      if (filters.year) params.append('year', filters.year.toString());
-      if (filters.semester) params.append('semester', filters.semester.toString());
-      if (filters.subject) params.append('subject', filters.subject);
-      if (filters.search) params.append('search', filters.search);
-      if (filters.attendanceRange?.min !== undefined) params.append('minAttendance', filters.attendanceRange.min.toString());
-      if (filters.attendanceRange?.max !== undefined) params.append('maxAttendance', filters.attendanceRange.max.toString());
-      if (filters.dateRange?.start) params.append('startDate', filters.dateRange.start);
-      if (filters.dateRange?.end) params.append('endDate', filters.dateRange.end);
+      if (appliedFilters.year) params.append('year', appliedFilters.year.toString());
+      if (appliedFilters.semester) params.append('semester', appliedFilters.semester.toString());
+      if (appliedFilters.subject) params.append('subject', appliedFilters.subject);
+      if (appliedFilters.search) params.append('search', appliedFilters.search);
+      if (appliedFilters.attendanceRange?.min !== undefined) params.append('minAttendance', appliedFilters.attendanceRange.min.toString());
+      if (appliedFilters.attendanceRange?.max !== undefined) params.append('maxAttendance', appliedFilters.attendanceRange.max.toString());
+      if (appliedFilters.dateRange?.start) params.append('startDate', appliedFilters.dateRange.start);
+      if (appliedFilters.dateRange?.end) params.append('endDate', appliedFilters.dateRange.end);
 
       const response = await fetch(`/api/students/history?${params.toString()}`);
       if (response.ok) {
@@ -70,8 +73,14 @@ export default function StudentHistoryTable({ className }: StudentHistoryTablePr
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
+  const applyFilters = () => {
+    setAppliedFilters({ ...filters });
+  };
+
   const clearFilters = () => {
-    setFilters({ attendanceRange: { min: 0, max: 100 } });
+    const defaultFilters = { attendanceRange: { min: 0, max: 100 } };
+    setFilters(defaultFilters);
+    setAppliedFilters(defaultFilters);
   };
 
   const handleSort = (field: SortField) => {
@@ -105,7 +114,7 @@ export default function StudentHistoryTable({ className }: StudentHistoryTablePr
       params.append('type', format);
       params.append('data', 'student-history');
       
-      Object.entries(filters).forEach(([key, value]) => {
+      Object.entries(appliedFilters).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
           if (typeof value === 'object' && !Array.isArray(value)) {
             Object.entries(value).forEach(([subKey, subValue]) => {
@@ -277,7 +286,7 @@ export default function StudentHistoryTable({ className }: StudentHistoryTablePr
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 {/* Search */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -412,6 +421,17 @@ export default function StudentHistoryTable({ className }: StudentHistoryTablePr
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
                   />
                 </div>
+              </div>
+              
+              {/* Apply Filters Button */}
+              <div className="flex justify-center pt-4 border-t">
+                <Button
+                  onClick={applyFilters}
+                  className="flex items-center gap-2 px-6"
+                >
+                  <Filter className="w-4 h-4" />
+                  Apply Filters
+                </Button>
               </div>
             </CardContent>
           </Card>

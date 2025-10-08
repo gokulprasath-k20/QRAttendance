@@ -163,30 +163,67 @@ export default function StudentAttendanceHistory({ studentId }: StudentAttendanc
     });
   };
 
-  const exportData = () => {
-    // Simple CSV export
-    const headers = ['Date', 'Subject', 'Staff', 'Status', 'Marked At'];
-    const csvData = filteredData.map(item => [
-      formatDate(item.date),
-      item.subject,
-      item.staff?.name || 'N/A',
-      item.status === 'present' ? 'Present' : 'Absent',
-      item.marked_at ? formatDate(item.marked_at) : 'N/A'
-    ]);
+  const exportData = async (format: 'csv' | 'excel') => {
+    if (format === 'csv') {
+      // Simple CSV export
+      const headers = ['Date', 'Subject', 'Staff', 'Status', 'Marked At'];
+      const csvData = filteredData.map(item => [
+        formatDate(item.date),
+        item.subject,
+        item.staff?.name || 'N/A',
+        item.status === 'present' ? 'Present' : 'Absent',
+        item.marked_at ? formatDate(item.marked_at) : 'N/A'
+      ]);
 
-    const csvContent = [headers, ...csvData]
-      .map(row => row.map(cell => `"${cell}"`).join(','))
-      .join('\n');
+      const csvContent = [headers, ...csvData]
+        .map(row => row.map(cell => `"${cell}"`).join(','))
+        .join('\n');
 
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'my-attendance-history.csv';
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'my-attendance-history.csv';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } else if (format === 'excel') {
+      // Excel export using API
+      try {
+        const params = new URLSearchParams();
+        params.append('type', 'excel');
+        params.append('data', 'student-attendance');
+        
+        // Add filter parameters
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== '') {
+            params.append(key, value.toString());
+          }
+        });
+
+        const response = await fetch(`/api/export?${params.toString()}`);
+        if (response.ok) {
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'my-attendance-history.xlsx';
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        } else {
+          console.error('Export failed');
+          // Fallback to CSV
+          exportData('csv');
+        }
+      } catch (error) {
+        console.error('Excel export failed:', error);
+        // Fallback to CSV
+        exportData('csv');
+      }
+    }
   };
 
   const getSubjectOptions = () => {
@@ -279,11 +316,19 @@ export default function StudentAttendanceHistory({ studentId }: StudentAttendanc
               </Button>
               <Button
                 variant="outline"
-                onClick={exportData}
+                onClick={() => exportData('excel')}
                 className="flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
-                Export
+                Excel
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => exportData('csv')}
+                className="flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                CSV
               </Button>
             </div>
           </div>

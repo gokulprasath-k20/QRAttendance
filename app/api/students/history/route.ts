@@ -57,6 +57,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch students' }, { status: 500 });
     }
 
+    // Debug logging
+    console.log('Applied filters:', filters);
+    console.log('Found students count:', students?.length);
+    if (students && students.length > 0) {
+      console.log('Sample student years:', students.slice(0, 3).map(s => ({ name: s.name, year: s.year, semester: s.semester })));
+    }
+
     // Get attendance data for each student
     const studentHistory: StudentHistoryRecord[] = await Promise.all(
       students.map(async (student) => {

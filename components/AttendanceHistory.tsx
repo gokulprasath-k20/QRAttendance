@@ -62,7 +62,7 @@ export function AttendanceHistory({ staffId }: AttendanceHistoryProps) {
       const staffSessions = sessionsData.sessions.filter((s: any) => s.staff_id === staffId);
 
       // Get unique subjects
-      const subjectSet = new Set();
+      const subjectSet = new Set<string>();
       staffSessions.forEach((s: any) => subjectSet.add(s.subject));
       const uniqueSubjects = Array.from(subjectSet);
       setSubjects(uniqueSubjects);
