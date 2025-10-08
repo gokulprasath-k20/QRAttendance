@@ -29,7 +29,7 @@ type SortDirection = 'asc' | 'desc';
 export default function StudentHistoryTable({ className }: StudentHistoryTableProps) {
   const [students, setStudents] = useState<StudentHistoryRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showFilters, setShowFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(true); // Show filters by default
   const [sortField, setSortField] = useState<SortField>('reg_no');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [filters, setFilters] = useState<StudentHistoryFilters>({
@@ -40,7 +40,20 @@ export default function StudentHistoryTable({ className }: StudentHistoryTablePr
   });
 
   useEffect(() => {
+    // Only fetch on mount, not on every appliedFilters change
     fetchStudentHistory();
+  }, []); // Empty dependency array for mount only
+
+  // Only fetch when filters are explicitly applied
+  useEffect(() => {
+    // Only fetch if this is not the initial state
+    const isInitialState = Object.keys(appliedFilters).length === 1 && 
+                          appliedFilters.attendanceRange?.min === 0 && 
+                          appliedFilters.attendanceRange?.max === 100;
+    
+    if (!isInitialState) {
+      fetchStudentHistory();
+    }
   }, [appliedFilters]);
 
   const fetchStudentHistory = async () => {
@@ -76,6 +89,14 @@ export default function StudentHistoryTable({ className }: StudentHistoryTablePr
   const applyFilters = () => {
     setAppliedFilters({ ...filters });
   };
+
+  const hasActiveFilters = () => {
+    return filters.year || filters.semester || filters.subject || filters.search || 
+           filters.attendanceRange?.min !== 0 || filters.attendanceRange?.max !== 100 ||
+           filters.dateRange?.start || filters.dateRange?.end;
+  };
+
+  const filtersApplied = JSON.stringify(filters) === JSON.stringify(appliedFilters);
 
   const clearFilters = () => {
     const defaultFilters = { attendanceRange: { min: 0, max: 100 } };
@@ -196,13 +217,13 @@ export default function StudentHistoryTable({ className }: StudentHistoryTablePr
             PDF
           </Button>
           <Button
-            variant="outline"
+            variant={showFilters ? "primary" : "outline"}
             size="sm"
             onClick={() => setShowFilters(!showFilters)}
             className="flex items-center gap-2"
           >
             <Filter className="w-4 h-4" />
-            Filters
+            {showFilters ? 'Hide Filters' : 'Show Filters'}
             <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
           </Button>
         </div>
@@ -277,13 +298,8 @@ export default function StudentHistoryTable({ className }: StudentHistoryTablePr
         >
           <Card>
             <CardHeader>
-              <div className="flex justify-between items-center">
-                <CardTitle className="text-base">Filters</CardTitle>
-                <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  <X className="w-4 h-4 mr-1" />
-                  Clear All
-                </Button>
-              </div>
+              <CardTitle className="text-base">Filter Options</CardTitle>
+              <p className="text-sm text-gray-600 mt-1">Set your filters and click "Apply Filters" to search</p>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
@@ -424,14 +440,42 @@ export default function StudentHistoryTable({ className }: StudentHistoryTablePr
               </div>
               
               {/* Apply Filters Button */}
-              <div className="flex justify-center pt-4 border-t">
-                <Button
-                  onClick={applyFilters}
-                  className="flex items-center gap-2 px-6"
-                >
-                  <Filter className="w-4 h-4" />
-                  Apply Filters
-                </Button>
+              <div className="flex flex-col items-center gap-3 pt-4 border-t">
+                {hasActiveFilters() && !filtersApplied && (
+                  <div className="text-sm text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+                    ⚠️ Filters changed - Click "Apply Filters" to search
+                  </div>
+                )}
+                {hasActiveFilters() && filtersApplied && (
+                  <div className="text-sm text-green-600 bg-green-50 px-3 py-1 rounded-full border border-green-200">
+                    ✅ Filters applied successfully
+                  </div>
+                )}
+                <div className="flex gap-4">
+                  <Button
+                    onClick={applyFilters}
+                    className={`flex items-center gap-2 px-8 text-white ${
+                      hasActiveFilters() && !filtersApplied 
+                        ? 'bg-amber-600 hover:bg-amber-700 animate-pulse' 
+                        : 'bg-primary-600 hover:bg-primary-700'
+                    }`}
+                    size="lg"
+                    disabled={!hasActiveFilters()}
+                  >
+                    <Filter className="w-5 h-5" />
+                    {hasActiveFilters() ? 'Apply Filters' : 'No Filters Set'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={clearFilters}
+                    className="flex items-center gap-2 px-6"
+                    size="lg"
+                    disabled={!hasActiveFilters()}
+                  >
+                    <X className="w-4 h-4" />
+                    Clear All
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>

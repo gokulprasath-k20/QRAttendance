@@ -29,9 +29,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (response.ok) {
         const data = await response.json();
         setUser(data.user);
+      } else if (response.status === 401) {
+        // Session expired or invalid, clear user state
+        setUser(null);
+        // Optionally redirect to login based on current path
+        if (typeof window !== 'undefined' && window.location.pathname !== '/') {
+          const currentPath = window.location.pathname;
+          if (currentPath.includes('/admin')) {
+            window.location.href = '/admin/login';
+          } else if (currentPath.includes('/staff')) {
+            window.location.href = '/staff/login';
+          } else if (currentPath.includes('/student')) {
+            window.location.href = '/student/login';
+          }
+        }
       }
     } catch (error) {
       console.error('Auth check failed:', error);
+      setUser(null);
     } finally {
       setLoading(false);
     }

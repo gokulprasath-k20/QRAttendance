@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
       id: data.id,
       email: data.email,
       role,
-      exp: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+      exp: Date.now() + (7 * 24 * 60 * 60 * 1000) // 7 days
     })).toString('base64');
 
     const response = NextResponse.json({
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 24 * 60 * 60 // 24 hours
+      maxAge: 7 * 24 * 60 * 60 // 7 days
     });
 
     return response;
