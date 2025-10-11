@@ -1,1 +1,9 @@
-{}
+{
+  "/api/attendance/route": "app/api/attendance/route.js",
+  "/api/sessions/otp/route": "app/api/sessions/otp/route.js",
+  "/api/sessions/[id]/route": "app/api/sessions/[id]/route.js",
+  "/api/sessions/route": "app/api/sessions/route.js",
+  "/staff/login/page": "app/staff/login/page.js",
+  "/staff/register/page": "app/staff/register/page.js",
+  "/staff/page": "app/staff/page.js"
+}

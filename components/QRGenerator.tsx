@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import { RefreshCw, Clock, Users } from 'lucide-react';
-import { encryptQRToken, generateQRToken } from '../lib/crypto';
+import { encryptOTPToken, generateOTPToken } from '../lib/crypto';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
 
 interface QRGeneratorProps {
@@ -32,8 +32,8 @@ export function QRGenerator({
   const generateNewToken = useCallback(() => {
     if (!isActive) return;
 
-    const token = generateQRToken(sessionId, subject, year, semester);
-    const encryptedToken = encryptQRToken(token);
+    const token = generateOTPToken(sessionId, subject, year, semester);
+    const encryptedToken = encryptOTPToken(token);
     setCurrentToken(encryptedToken);
     setTimeLeft(8);
     setRotationCount(prev => prev + 1);

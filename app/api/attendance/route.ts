@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '../../../lib/supabase';
-import { decryptQRToken, isQRTokenValid } from '../../../lib/crypto';
+import { decryptOTPToken, isOTPTokenValid } from '../../../lib/crypto';
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,22 +16,44 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Only students can mark attendance' }, { status: 403 });
     }
 
-    const { qrToken } = await request.json();
+    const { otpCode } = await request.json();
 
-    if (!qrToken) {
-      return NextResponse.json({ error: 'QR token is required' }, { status: 400 });
+    if (!otpCode) {
+      return NextResponse.json({ error: 'OTP code is required' }, { status: 400 });
     }
 
-    // Decrypt and validate QR token
-    let token;
-    try {
-      token = decryptQRToken(qrToken);
-    } catch (error) {
-      return NextResponse.json({ error: 'Invalid QR code' }, { status: 400 });
+    // Find active session with matching OTP
+    const { data: sessions, error: sessionError } = await supabaseAdmin
+      .from('otp_sessions')
+      .select('*, current_otp_token')
+      .eq('is_active', true);
+
+    if (sessionError || !sessions || sessions.length === 0) {
+      return NextResponse.json({ error: 'No active sessions found' }, { status: 404 });
     }
 
-    if (!isQRTokenValid(token)) {
-      return NextResponse.json({ error: 'QR code has expired. Please scan a fresh code.' }, { status: 400 });
+    let matchingSession = null;
+    let validToken = null;
+
+    // Check each active session for matching OTP
+    for (const session of sessions) {
+      if (session.current_otp_token) {
+        try {
+          const token = decryptOTPToken(session.current_otp_token);
+          if (token.otp === otpCode && isOTPTokenValid(token)) {
+            matchingSession = session;
+            validToken = token;
+            break;
+          }
+        } catch (error) {
+          // Continue to next session if decryption fails
+          continue;
+        }
+      }
+    }
+
+    if (!matchingSession || !validToken) {
+      return NextResponse.json({ error: 'Invalid or expired OTP code' }, { status: 400 });
     }
 
     // Get student details
@@ -45,17 +67,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Student not found' }, { status: 404 });
     }
 
-    // Verify session exists and is active
-    const { data: session, error: sessionError } = await supabaseAdmin
-      .from('qr_sessions')
-      .select('*')
-      .eq('id', token.sessionId)
-      .eq('is_active', true)
-      .single();
-
-    if (sessionError || !session) {
-      return NextResponse.json({ error: 'Session not found or inactive' }, { status: 404 });
-    }
+    const session = matchingSession;
+    const token = validToken;
 
     // Verify student belongs to the correct year/semester
     if (student.year !== session.year || student.semester !== session.semester) {
@@ -64,18 +77,18 @@ export async function POST(request: NextRequest) {
       }, { status: 403 });
     }
 
-    // Verify QR token matches session details
+    // Verify OTP token matches session details
     if (token.subject !== session.subject || 
         token.year !== session.year || 
         token.semester !== session.semester) {
-      return NextResponse.json({ error: 'QR code mismatch' }, { status: 400 });
+      return NextResponse.json({ error: 'OTP code mismatch' }, { status: 400 });
     }
 
     // Check if attendance already marked
     const { data: existingAttendance } = await supabaseAdmin
       .from('attendance')
       .select('id')
-      .eq('session_id', token.sessionId)
+      .eq('session_id', session.id)
       .eq('student_id', studentId)
       .single();
 
@@ -89,7 +102,7 @@ export async function POST(request: NextRequest) {
     const { data: attendance, error: attendanceError } = await supabaseAdmin
       .from('attendance')
       .insert({
-        session_id: token.sessionId,
+        session_id: session.id,
         student_id: studentId
       })
       .select(`
@@ -188,7 +201,7 @@ export async function GET(request: NextRequest) {
       if (sessionId) {
         // Verify session belongs to staff
         const { data: session } = await supabaseAdmin
-          .from('qr_sessions')
+          .from('otp_sessions')
           .select('staff_id')
           .eq('id', sessionId)
           .single();
@@ -201,7 +214,7 @@ export async function GET(request: NextRequest) {
       } else {
         // Filter by staff's sessions
         const { data: staffSessions } = await supabaseAdmin
-          .from('qr_sessions')
+          .from('otp_sessions')
           .select('id')
           .eq('staff_id', userId);
 

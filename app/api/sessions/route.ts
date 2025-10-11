@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     if (role === 'staff') {
       // Get sessions for staff member
       const { data: sessions, error } = await supabaseAdmin
-        .from('qr_sessions')
+        .from('otp_sessions')
         .select(`
           *,
           staff:staff_id (
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
       }
 
       const { data: sessions, error } = await supabaseAdmin
-        .from('qr_sessions')
+        .from('otp_sessions')
         .select(`
           *,
           staff:staff_id (
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
     } else if (role === 'admin') {
       // Get all sessions for admin
       const { data: sessions, error } = await supabaseAdmin
-        .from('qr_sessions')
+        .from('otp_sessions')
         .select(`
           *,
           staff:staff_id (
@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
 
     // Check if there's already an active session for this staff member
     const { data: activeSession } = await supabaseAdmin
-      .from('qr_sessions')
+      .from('otp_sessions')
       .select('id')
       .eq('staff_id', staffId)
       .eq('is_active', true)
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
 
     // Create new session
     const { data: newSession, error } = await supabaseAdmin
-      .from('qr_sessions')
+      .from('otp_sessions')
       .insert({
         staff_id: staffId,
         subject,

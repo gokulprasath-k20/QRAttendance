@@ -6,16 +6,16 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { 
-  QrCode, 
+  Key, 
   Calendar, 
   CheckCircle,
   LogOut,
-  Scan,
+  Hash,
   History
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
-import { QRScanner } from '../../components/QRScanner';
+import { OTPInput } from '../../components/OTPInput';
 import StudentAttendanceHistory from '../../components/StudentAttendanceHistory';
 import { useAuth, withAuth } from '../../lib/auth';
 import { Student, QRSession, Attendance } from '../../types';
@@ -26,9 +26,9 @@ function StudentDashboard() {
   const [sessions, setSessions] = useState<QRSession[]>([]);
   const [attendance, setAttendance] = useState<Attendance[]>([]);
   const [loading, setLoading] = useState(true);
-  const [scannerOpen, setScannerOpen] = useState(false);
-  const [scanning, setScanning] = useState(false);
-  const [scanMessage, setScanMessage] = useState('');
+  const [otpInputOpen, setOtpInputOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [otpMessage, setOtpMessage] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
 
   const student = user as Student;
@@ -60,41 +60,41 @@ function StudentDashboard() {
     }
   };
 
-  const handleScanSuccess = async (qrToken: string) => {
-    setScanning(true);
-    setScanMessage('');
+  const handleOTPSuccess = async (otpCode: string) => {
+    setSubmitting(true);
+    setOtpMessage('');
 
     try {
       const response = await fetch('/api/attendance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ qrToken })
+        body: JSON.stringify({ otpCode })
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setScanMessage('✅ Attendance marked successfully!');
-        // Close scanner on success
-        setScannerOpen(false);
+        setOtpMessage('✅ Attendance marked successfully!');
+        // Close OTP input on success
+        setOtpInputOpen(false);
         // Refresh data with a small delay to ensure backend is updated
         setTimeout(() => {
           fetchData();
         }, 500);
       } else {
-        setScanMessage(`❌ ${data.error}`);
+        setOtpMessage(`❌ ${data.error}`);
       }
     } catch (error) {
-      setScanMessage('❌ Failed to mark attendance');
+      setOtpMessage('❌ Failed to mark attendance');
     } finally {
-      setScanning(false);
-      setTimeout(() => setScanMessage(''), 3000);
+      setSubmitting(false);
+      setTimeout(() => setOtpMessage(''), 3000);
     }
   };
 
-  const handleScanError = (error: string) => {
-    setScanMessage(`❌ ${error}`);
-    setTimeout(() => setScanMessage(''), 3000);
+  const handleOTPError = (error: string) => {
+    setOtpMessage(`❌ ${error}`);
+    setTimeout(() => setOtpMessage(''), 3000);
   };
 
   const getActiveSessions = () => {
@@ -142,18 +142,18 @@ function StudentDashboard() {
       </header>
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
-        {/* Scan Message */}
-        {scanMessage && (
+        {/* OTP Message */}
+        {otpMessage && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className={`mb-6 p-4 rounded-lg ${
-              scanMessage.includes('✅') 
+              otpMessage.includes('✅') 
                 ? 'bg-success-50 border border-success-200 text-success-700'
                 : 'bg-error-50 border border-error-200 text-error-700'
             }`}
           >
-            {scanMessage}
+            {otpMessage}
           </motion.div>
         )}
 
@@ -169,7 +169,7 @@ function StudentDashboard() {
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                <QrCode className="w-4 h-4 inline mr-2" />
+                <Key className="w-4 h-4 inline mr-2" />
                 Dashboard
               </button>
               <button
@@ -191,26 +191,26 @@ function StudentDashboard() {
         <div className="max-w-6xl mx-auto">
           {activeTab === 'dashboard' && (
             <div className="space-y-4 sm:space-y-6">
-            {/* QR Scanner */}
+            {/* OTP Input */}
             <Card className="bg-gradient-to-br from-primary-50 to-secondary-50 border-2 border-primary-200">
               <CardHeader className="text-center">
                 <CardTitle className="flex items-center justify-center gap-2 text-primary-700">
-                  <QrCode className="w-6 h-6" />
-                  Scan QR Code
+                  <Key className="w-6 h-6" />
+                  Enter OTP Code
                 </CardTitle>
                 <p className="text-sm text-gray-600">
-                  Scan the QR code displayed by your instructor to mark attendance
+                  Enter the 6-digit OTP code displayed by your instructor to mark attendance
                 </p>
               </CardHeader>
               <CardContent className="text-center">
                 <Button
-                  onClick={() => setScannerOpen(true)}
-                  disabled={scanning}
+                  onClick={() => setOtpInputOpen(true)}
+                  disabled={submitting}
                   size="lg"
                   className="w-full sm:w-auto flex items-center gap-2"
                 >
-                  <Scan className="w-5 h-5" />
-                  {scanning ? 'Processing...' : 'Open Scanner'}
+                  <Hash className="w-5 h-5" />
+                  {submitting ? 'Processing...' : 'Enter OTP'}
                 </Button>
                 
                 {activeSessions.length > 0 && (
@@ -268,12 +268,12 @@ function StudentDashboard() {
         </div>
       </div>
 
-      {/* QR Scanner Modal */}
-      <QRScanner
-        isOpen={scannerOpen}
-        onClose={() => setScannerOpen(false)}
-        onScanSuccess={handleScanSuccess}
-        onScanError={handleScanError}
+      {/* OTP Input Modal */}
+      <OTPInput
+        isOpen={otpInputOpen}
+        onClose={() => setOtpInputOpen(false)}
+        onSubmitSuccess={handleOTPSuccess}
+        onSubmitError={handleOTPError}
       />
     </div>
   );

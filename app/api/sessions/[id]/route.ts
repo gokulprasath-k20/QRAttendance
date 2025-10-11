@@ -17,7 +17,7 @@ export async function GET(
 
     // Get session with attendance data
     const { data: session, error } = await supabaseAdmin
-      .from('qr_sessions')
+      .from('otp_sessions')
       .select(`
         *,
         staff:staff_id (
@@ -89,7 +89,7 @@ export async function PATCH(
 
     // Verify session belongs to staff member
     const { data: session } = await supabaseAdmin
-      .from('qr_sessions')
+      .from('otp_sessions')
       .select('staff_id, is_active')
       .eq('id', params.id)
       .single();
@@ -109,7 +109,7 @@ export async function PATCH(
     }
 
     const { data: updatedSession, error } = await supabaseAdmin
-      .from('qr_sessions')
+      .from('otp_sessions')
       .update(updateData)
       .eq('id', params.id)
       .select(`
@@ -153,7 +153,7 @@ export async function DELETE(
 
     // Verify session exists and check permissions
     const { data: session } = await supabaseAdmin
-      .from('qr_sessions')
+      .from('otp_sessions')
       .select('staff_id')
       .eq('id', params.id)
       .single();
@@ -168,7 +168,7 @@ export async function DELETE(
 
     // Delete session (attendance records will be deleted due to CASCADE)
     const { error } = await supabaseAdmin
-      .from('qr_sessions')
+      .from('otp_sessions')
       .delete()
       .eq('id', params.id);
 

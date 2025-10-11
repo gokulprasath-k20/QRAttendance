@@ -1,26 +1,26 @@
 import CryptoJS from 'crypto-js';
-import { QRToken } from '@/types';
+import { OTPToken } from '@/types';
 
-const SECRET_KEY = process.env.NEXT_PUBLIC_QR_SECRET || 'default-secret-key-change-in-production';
+const SECRET_KEY = process.env.NEXT_PUBLIC_OTP_SECRET || 'default-secret-key-change-in-production';
 
 /**
- * Encrypts QR token data using AES encryption
+ * Encrypts OTP token data using AES encryption
  */
-export function encryptQRToken(token: QRToken): string {
+export function encryptOTPToken(token: OTPToken): string {
   try {
     const jsonString = JSON.stringify(token);
     const encrypted = CryptoJS.AES.encrypt(jsonString, SECRET_KEY).toString();
     return encrypted;
   } catch (error) {
     console.error('Encryption error:', error);
-    throw new Error('Failed to encrypt QR token');
+    throw new Error('Failed to encrypt OTP token');
   }
 }
 
 /**
- * Decrypts QR token data
+ * Decrypts OTP token data
  */
-export function decryptQRToken(encryptedData: string): QRToken {
+export function decryptOTPToken(encryptedData: string): OTPToken {
   try {
     const decrypted = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
     const jsonString = decrypted.toString(CryptoJS.enc.Utf8);
@@ -29,42 +29,50 @@ export function decryptQRToken(encryptedData: string): QRToken {
       throw new Error('Invalid encrypted data');
     }
     
-    const token = JSON.parse(jsonString) as QRToken;
+    const token = JSON.parse(jsonString) as OTPToken;
     
     // Validate token structure
-    if (!token.sessionId || !token.timestamp || !token.subject || !token.year || !token.semester) {
+    if (!token.sessionId || !token.timestamp || !token.subject || !token.year || !token.semester || !token.otp) {
       throw new Error('Invalid token structure');
     }
     
     return token;
   } catch (error) {
     console.error('Decryption error:', error);
-    throw new Error('Failed to decrypt QR token');
+    throw new Error('Failed to decrypt OTP token');
   }
 }
 
 /**
- * Validates if QR token is still valid (within 5 seconds)
+ * Validates if OTP token is still valid (within 8 seconds)
  */
-export function isQRTokenValid(token: QRToken): boolean {
+export function isOTPTokenValid(token: OTPToken): boolean {
   const currentTime = Date.now();
   const tokenTime = token.timestamp;
   const timeDifference = Math.abs(currentTime - tokenTime);
   
-  // Token is valid for 5 seconds (5000ms)
-  return timeDifference <= 5000;
+  // Token is valid for 8 seconds (8000ms)
+  return timeDifference <= 8000;
 }
 
 /**
- * Generates a new QR token with current timestamp
+ * Generates a 6-digit OTP code
  */
-export function generateQRToken(sessionId: string, subject: string, year: number, semester: number): QRToken {
+export function generateOTP(): string {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+/**
+ * Generates a new OTP token with current timestamp and OTP
+ */
+export function generateOTPToken(sessionId: string, subject: string, year: number, semester: number): OTPToken {
   return {
     sessionId,
     timestamp: Date.now(),
     subject,
     year,
-    semester
+    semester,
+    otp: generateOTP()
   };
 }
 

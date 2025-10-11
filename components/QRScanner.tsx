@@ -7,7 +7,7 @@ import { Camera, X, CheckCircle, AlertCircle, Scan } from 'lucide-react';
 import jsQR from 'jsqr';
 import { Button } from './ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
-import { decryptQRToken, isQRTokenValid } from '../lib/crypto';
+import { decryptOTPToken, isOTPTokenValid } from '../lib/crypto';
 
 interface QRScannerProps {
   onScanSuccess: (token: string) => void;
@@ -114,9 +114,9 @@ export function QRScanner({ onScanSuccess, onScanError, isOpen, onClose }: QRSca
       }
 
       // Decrypt and validate token
-      const token = decryptQRToken(data);
+      const token = decryptOTPToken(data);
       
-      if (!isQRTokenValid(token)) {
+      if (!isOTPTokenValid(token)) {
         throw new Error('QR code has expired. Please scan a fresh code.');
       }
 

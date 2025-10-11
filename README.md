@@ -1,20 +1,20 @@
-# QR Attendance Management System
+# OTP Attendance Management System
 
-A modern, secure, and mobile-first QR Attendance Management System built with Next.js 15, TypeScript, Supabase, and Tailwind CSS. Features auto-rotating QR codes, PWA support, and role-based access for Admin, Staff, and Students.
+A modern, secure, and mobile-first OTP Attendance Management System built with Next.js 15, TypeScript, Supabase, and Tailwind CSS. Features auto-rotating OTP codes, PWA support, and role-based access for Admin, Staff, and Students.
 
 ## 🚀 Features
 
 > **Build Status**: Import paths fixed for Vercel deployment
 
 - **🔐 Security & Authentication**
-  - 5-second QR code rotation with AES encrypted tokens
+  - 8-second OTP code rotation with AES encrypted tokens
   - Role-based access control (Admin, Staff, Student)
   - Session-based authentication with Supabase Auth
   - Duplicate attendance prevention mechanisms
 
 - **📱 Progressive Web App (PWA)**
   - Installable PWA with offline capability
-  - Camera-based QR scanning using jsQR
+  - OTP input interface for attendance marking
   - Touch-optimized interface for mobile devices
   - Native app experience on all platforms
 
@@ -36,7 +36,7 @@ A modern, secure, and mobile-first QR Attendance Management System built with Ne
 - **Backend**: Next.js API Routes, Supabase (PostgreSQL)
 - **Authentication**: Supabase Auth with custom role-based system
 - **Database**: PostgreSQL with Row Level Security
-- **QR Code**: qrcode.react, jsQR for scanning
+- **OTP System**: 6-digit OTP generation and validation
 - **Security**: crypto-js for AES encryption
 - **PWA**: Service Worker, Web App Manifest
 
@@ -44,7 +44,7 @@ A modern, secure, and mobile-first QR Attendance Management System built with Ne
 
 - Node.js 18+ and npm/yarn
 - Supabase account and project
-- Modern web browser with camera support
+- Modern web browser with keyboard input support
 
 ## 🚀 Quick Start
 
@@ -79,8 +79,8 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
-# QR Code Encryption (32 characters)
-NEXT_PUBLIC_QR_SECRET=your_32_character_encryption_secret_key
+# OTP Code Encryption (32 characters)
+NEXT_PUBLIC_OTP_SECRET=your_32_character_encryption_secret_key
 
 # Admin Credentials
 ADMIN_EMAIL=admin@college.edu
@@ -112,7 +112,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ### 🎓 Student Portal (`/student`)
 - **Registration**: Registration number, name, email, year, semester
 - **Login**: Email and password authentication
-- **QR Scanning**: Camera-based QR code scanning for attendance
+- **OTP Entry**: 6-digit OTP code input for attendance marking
 - **Attendance History**: View past attendance records
 - **Statistics**: Track attendance percentage and analytics
 
@@ -120,7 +120,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - **Registration**: Name, email, subjects selection
 - **Login**: Email and password authentication
 - **Session Management**: Create and manage attendance sessions
-- **QR Generation**: Auto-rotating encrypted QR codes (5-second intervals)
+- **OTP Generation**: Auto-rotating encrypted OTP codes (8-second intervals)
 - **Live Monitoring**: Real-time attendance tracking
 - **Reports**: Export attendance data
 
@@ -138,7 +138,7 @@ qrmanagement/
 ├── app/                    # Next.js 15 App Router
 │   ├── api/               # API routes
 │   │   ├── auth/          # Authentication endpoints
-│   │   ├── sessions/      # QR session management
+│   │   ├── sessions/      # OTP session management
 │   │   └── attendance/    # Attendance marking
 │   ├── admin/             # Admin portal pages
 │   ├── staff/             # Staff portal pages
@@ -146,8 +146,8 @@ qrmanagement/
 │   └── globals.css        # Global styles
 ├── components/            # Reusable UI components
 │   ├── ui/               # Basic UI components
-│   ├── QRGenerator.tsx   # QR code generation
-│   └── QRScanner.tsx     # QR code scanning
+│   ├── OTPGenerator.tsx  # OTP code generation
+│   └── OTPInput.tsx      # OTP code input interface
 ├── lib/                  # Utility libraries
 │   ├── auth.tsx          # Authentication context
 │   ├── crypto.ts         # Encryption utilities
@@ -160,9 +160,9 @@ qrmanagement/
 
 ## 🔒 Security Features
 
-### QR Code Security
-- **AES Encryption**: All QR tokens are encrypted using AES-256
-- **Time-based Expiry**: QR codes expire after 5 seconds
+### OTP Code Security
+- **AES Encryption**: All OTP tokens are encrypted using AES-256
+- **Time-based Expiry**: OTP codes expire after 8 seconds
 - **Session Validation**: Tokens include session metadata for validation
 - **Duplicate Prevention**: Students cannot mark attendance twice for the same session
 

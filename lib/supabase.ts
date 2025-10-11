@@ -105,7 +105,7 @@ export type Database = {
           created_at?: string;
         };
       };
-      qr_sessions: {
+      otp_sessions: {
         Row: {
           id: string;
           staff_id: string;
@@ -117,6 +117,11 @@ export type Database = {
           end_time: string | null;
           is_active: boolean;
           total_students: number;
+          current_otp_token: string | null;
+          otp_rotation_count: number;
+          last_otp_update: string;
+          created_at: string;
+          updated_at: string;
         };
         Insert: {
           id?: string;
@@ -129,6 +134,11 @@ export type Database = {
           end_time?: string | null;
           is_active?: boolean;
           total_students?: number;
+          current_otp_token?: string | null;
+          otp_rotation_count?: number;
+          last_otp_update?: string;
+          created_at?: string;
+          updated_at?: string;
         };
         Update: {
           id?: string;
@@ -141,6 +151,11 @@ export type Database = {
           end_time?: string | null;
           is_active?: boolean;
           total_students?: number;
+          current_otp_token?: string | null;
+          otp_rotation_count?: number;
+          last_otp_update?: string;
+          created_at?: string;
+          updated_at?: string;
         };
       };
       attendance: {

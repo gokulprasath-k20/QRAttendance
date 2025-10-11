@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { GraduationCap, QrCode } from 'lucide-react';
+import { GraduationCap, Key } from 'lucide-react';
 
 export default function HomePage() {
   return (
@@ -40,11 +40,11 @@ export default function HomePage() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full mb-8 shadow-lg"
             >
-              <QrCode className="w-10 h-10 text-primary-600" />
+              <Key className="w-10 h-10 text-primary-600" />
             </motion.div>
             
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8 sm:mb-12 font-playfair">
-              QR Attendance
+              OTP Attendance
               <span className="block text-secondary-200">Management System</span>
             </h1>
             

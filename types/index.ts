@@ -23,7 +23,7 @@ export interface Admin extends User {
   password_hash: string;
 }
 
-export interface QRSession {
+export interface OTPSession {
   id: string;
   staff_id: string;
   subject: string;
@@ -34,8 +34,17 @@ export interface QRSession {
   end_time?: string;
   is_active: boolean;
   total_students: number;
+  current_otp_token?: string;
+  otp_rotation_count?: number;
+  last_otp_update?: string;
+  created_at?: string;
+  updated_at?: string;
   staff?: Staff;
 }
+
+// Backward compatibility aliases
+export type QRSession = OTPSession;
+export type AttendanceSession = OTPSession;
 
 export interface Attendance {
   id: string;
@@ -52,6 +61,15 @@ export interface QRToken {
   subject: string;
   year: number;
   semester: number;
+}
+
+export interface OTPToken {
+  sessionId: string;
+  timestamp: number;
+  subject: string;
+  year: number;
+  semester: number;
+  otp: string;
 }
 
 export interface AttendanceStats {
@@ -71,7 +89,7 @@ export interface DashboardStats {
 }
 
 export interface ExportData {
-  sessions: QRSession[];
+  sessions: OTPSession[];
   attendance: Attendance[];
   students: Student[];
   dateRange: {

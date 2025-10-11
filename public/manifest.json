@@ -1,7 +1,7 @@
 {
-  "name": "QR Attendance Management System",
-  "short_name": "QR Attendance",
-  "description": "Modern, secure QR-based attendance management for educational institutions",
+  "name": "OTP Attendance Management System",
+  "short_name": "OTP Attendance",
+  "description": "Modern, secure OTP-based attendance management for educational institutions",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
