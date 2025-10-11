@@ -157,12 +157,12 @@ BEGIN
         RETURN;
     END IF;
     
-    -- Find active session with matching OTP for student's year/semester (8-second window)
+    -- Find active session with matching OTP for student's year/semester (15-second window)
     SELECT oh.*, os.* INTO v_otp_record
     FROM otp_history oh
     JOIN otp_sessions os ON oh.session_id = os.id
     WHERE oh.otp_code = p_otp_code
-    AND oh.generated_at > NOW() - INTERVAL '8 seconds'
+    AND oh.generated_at > NOW() - INTERVAL '15 seconds'
     AND oh.is_used = FALSE
     AND os.is_active = TRUE
     AND os.year = v_student_record.year
@@ -171,7 +171,7 @@ BEGIN
     LIMIT 1;
     
     IF NOT FOUND THEN
-        RETURN QUERY SELECT FALSE, 'Invalid or expired OTP code (8-second window)', NULL::UUID;
+        RETURN QUERY SELECT FALSE, 'Invalid or expired OTP code (15-second window)', NULL::UUID;
         RETURN;
     END IF;
     
@@ -288,18 +288,18 @@ JOIN students s ON a.student_id = s.id
 JOIN otp_sessions os ON a.session_id = os.id
 JOIN staff st ON os.staff_id = st.id;
 
--- View for active OTP sessions with current codes (8-second window)
+-- View for active OTP sessions with current codes (15-second window)
 CREATE OR REPLACE VIEW active_otp_sessions AS
 SELECT 
     s.*,
     st.name as staff_name,
     oh.otp_code as current_otp,
     oh.generated_at as otp_generated_at,
-    oh.generated_at + INTERVAL '8 seconds' as otp_expires_at
+    oh.generated_at + INTERVAL '15 seconds' as otp_expires_at
 FROM otp_sessions s
 JOIN staff st ON s.staff_id = st.id
 LEFT JOIN otp_history oh ON s.id = oh.session_id 
-    AND oh.generated_at > NOW() - INTERVAL '8 seconds'
+    AND oh.generated_at > NOW() - INTERVAL '15 seconds'
     AND oh.is_used = FALSE
 WHERE s.is_active = TRUE
 ORDER BY s.created_at DESC, oh.generated_at DESC;

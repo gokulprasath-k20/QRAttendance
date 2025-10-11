@@ -44,15 +44,15 @@ export function decryptOTPToken(encryptedData: string): OTPToken {
 }
 
 /**
- * Validates if OTP token is still valid (within 8 seconds)
+ * Validates if OTP token is still valid (within 15 seconds)
  */
 export function isOTPTokenValid(token: OTPToken): boolean {
   const currentTime = Date.now();
   const tokenTime = token.timestamp;
   const timeDifference = Math.abs(currentTime - tokenTime);
   
-  // Token is valid for 8 seconds (8000ms)
-  return timeDifference <= 8000;
+  // Token is valid for 15 seconds (15000ms)
+  return timeDifference <= 15000;
 }
 
 /**
