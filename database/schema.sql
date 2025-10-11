@@ -206,31 +206,39 @@ ALTER TABLE otp_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE attendance ENABLE ROW LEVEL SECURITY;
 ALTER TABLE otp_history ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies for staff table
+-- RLS Policies for staff table (drop existing ones first)
+DROP POLICY IF EXISTS "Staff can view their own data" ON staff;
 CREATE POLICY "Staff can view their own data" ON staff
     FOR SELECT USING (auth.uid()::text = id::text);
 
+DROP POLICY IF EXISTS "Staff can update their own data" ON staff;
 CREATE POLICY "Staff can update their own data" ON staff
     FOR UPDATE USING (auth.uid()::text = id::text);
 
 -- RLS Policies for students table
+DROP POLICY IF EXISTS "Students can view their own data" ON students;
 CREATE POLICY "Students can view their own data" ON students
     FOR SELECT USING (auth.uid()::text = id::text);
 
+DROP POLICY IF EXISTS "Students can update their own data" ON students;
 CREATE POLICY "Students can update their own data" ON students
     FOR UPDATE USING (auth.uid()::text = id::text);
 
 -- RLS Policies for admin table
+DROP POLICY IF EXISTS "Admin can view their own data" ON admin;
 CREATE POLICY "Admin can view their own data" ON admin
     FOR SELECT USING (auth.uid()::text = id::text);
 
+DROP POLICY IF EXISTS "Admin can update their own data" ON admin;
 CREATE POLICY "Admin can update their own data" ON admin
     FOR UPDATE USING (auth.uid()::text = id::text);
 
 -- RLS Policies for otp_sessions table
+DROP POLICY IF EXISTS "Staff can manage their own sessions" ON otp_sessions;
 CREATE POLICY "Staff can manage their own sessions" ON otp_sessions
     FOR ALL USING (auth.uid()::text = staff_id::text);
 
+DROP POLICY IF EXISTS "Students can view sessions for their year/semester" ON otp_sessions;
 CREATE POLICY "Students can view sessions for their year/semester" ON otp_sessions
     FOR SELECT USING (
         EXISTS (
@@ -242,6 +250,7 @@ CREATE POLICY "Students can view sessions for their year/semester" ON otp_sessio
     );
 
 -- RLS Policies for attendance table
+DROP POLICY IF EXISTS "Staff can view attendance for their sessions" ON attendance;
 CREATE POLICY "Staff can view attendance for their sessions" ON attendance
     FOR SELECT USING (
         EXISTS (
@@ -251,13 +260,16 @@ CREATE POLICY "Staff can view attendance for their sessions" ON attendance
         )
     );
 
+DROP POLICY IF EXISTS "Students can view their own attendance" ON attendance;
 CREATE POLICY "Students can view their own attendance" ON attendance
     FOR SELECT USING (auth.uid()::text = student_id::text);
 
+DROP POLICY IF EXISTS "Students can insert their own attendance" ON attendance;
 CREATE POLICY "Students can insert their own attendance" ON attendance
     FOR INSERT WITH CHECK (auth.uid()::text = student_id::text);
 
 -- RLS Policies for otp_history table
+DROP POLICY IF EXISTS "Staff can view OTP history for their sessions" ON otp_history;
 CREATE POLICY "Staff can view OTP history for their sessions" ON otp_history
     FOR SELECT USING (
         EXISTS (
