@@ -53,7 +53,7 @@ function StaffDashboard() {
       // Set up real-time attendance updates
       const interval = setInterval(() => {
         fetchAttendance(activeSession.id);
-      }, 8000);
+      }, 15000);
       return () => clearInterval(interval);
     }
   }, [activeSession]);

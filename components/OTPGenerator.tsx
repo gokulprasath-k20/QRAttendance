@@ -25,7 +25,7 @@ export function OTPGenerator({
   onTokenUpdate
 }: OTPGeneratorProps) {
   const [currentOTP, setCurrentOTP] = useState<string>('');
-  const [timeLeft, setTimeLeft] = useState<number>(8);
+  const [timeLeft, setTimeLeft] = useState<number>(15);
   const [rotationCount, setRotationCount] = useState<number>(1);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   
@@ -50,7 +50,7 @@ export function OTPGenerator({
     }
     
     // Reset countdown to 8 seconds
-    setTimeLeft(8);
+    setTimeLeft(15);
     setIsGenerating(false);
   }, [sessionId, subject, year, semester, isActive, onTokenUpdate, isGenerating, rotationCount]);
 
@@ -64,7 +64,7 @@ export function OTPGenerator({
 
     if (!isActive) {
       setCurrentOTP('');
-      setTimeLeft(8);
+      setTimeLeft(15);
       setRotationCount(1);
       return;
     }
@@ -73,7 +73,7 @@ export function OTPGenerator({
     handleOTPCycle();
 
     // Set up master interval that handles both OTP rotation and countdown
-    let countdownTimer = 8;
+    let countdownTimer = 15;
     masterIntervalRef.current = setInterval(() => {
       countdownTimer--;
       setTimeLeft(countdownTimer);
@@ -81,7 +81,7 @@ export function OTPGenerator({
       // When countdown reaches 0, generate new OTP and reset
       if (countdownTimer <= 0) {
         handleOTPCycle();
-        countdownTimer = 8;
+        countdownTimer = 15;
       }
     }, 1000);
 
@@ -155,7 +155,7 @@ export function OTPGenerator({
                 {currentOTP}
               </div>
               <div className="text-sm text-gray-500 mt-2">
-                6-Digit OTP Code (8s rotation)
+                6-Digit OTP Code (15s rotation)
               </div>
               <div className="text-xs text-gray-400 mt-1">
                 Generated: {new Date().toLocaleTimeString()}
@@ -177,7 +177,7 @@ export function OTPGenerator({
           <motion.div
             className="bg-primary-600 h-2 rounded-full"
             initial={{ width: '100%' }}
-            animate={{ width: `${(timeLeft / 8) * 100}%` }}
+            animate={{ width: `${(timeLeft / 15) * 100}%` }}
             transition={{ duration: 1, ease: 'linear' }}
           />
         </div>
@@ -185,7 +185,7 @@ export function OTPGenerator({
         {/* Security Notice */}
         <div className="mt-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
           <p className="text-xs text-yellow-700">
-            🔒 This OTP code rotates every <strong>8 seconds</strong> for maximum security
+            🔒 This OTP code rotates every <strong>15 seconds</strong> for maximum security
           </p>
           <div className="flex items-center justify-between mt-2">
             <p className="text-xs text-yellow-600">
