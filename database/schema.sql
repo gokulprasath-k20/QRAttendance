@@ -107,16 +107,20 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
--- Create triggers for updated_at
+-- Create triggers for updated_at (drop existing ones first)
+DROP TRIGGER IF EXISTS update_staff_updated_at ON staff;
 CREATE TRIGGER update_staff_updated_at BEFORE UPDATE ON staff
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_students_updated_at ON students;
 CREATE TRIGGER update_students_updated_at BEFORE UPDATE ON students
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_admin_updated_at ON admin;
 CREATE TRIGGER update_admin_updated_at BEFORE UPDATE ON admin
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_otp_sessions_updated_at ON otp_sessions;
 CREATE TRIGGER update_otp_sessions_updated_at BEFORE UPDATE ON otp_sessions
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
