@@ -304,7 +304,7 @@ JOIN students s ON a.student_id = s.id
 JOIN otp_sessions os ON a.session_id = os.id
 JOIN staff st ON os.staff_id = st.id;
 
--- View for active OTP sessions with current codes (15-second window)
+DROP VIEW IF EXISTS active_otp_sessions;
 CREATE OR REPLACE VIEW active_otp_sessions AS
 SELECT 
     s.*,
